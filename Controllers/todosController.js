@@ -110,14 +110,10 @@ const getAllTodo = async (req, res) => {
 
     let { page, limit, sortBy } = req.query || false
 
-    console.log("page", page)
-    console.log("LIMIT", limit)
-
     page = page ? parseInt(page) : 1
     limit = limit ? parseInt(limit) : 10
     sortBy = sortBy ?? {}
-    console.log("page", page)
-    console.log("LIMIT", limit)
+
     try {
 
         let cachedData = await hmget("todos", `${page + limit + sortBy}`)
@@ -227,11 +223,43 @@ const updateTodoListStatus = async (req, res) => {
 
 }
 
+const searchTodo = async (req, res) => {
+
+    const client = await new MongoClient(process.env.MONGODB_URI)
+    const database = client.db("dbs")
+    const todos = database.collection("todos")
+
+    let { page, limit } = req.query || false
+
+    page = page ? parseInt(page) : 1
+    limit = limit ? parseInt(limit) : 10
+
+    try {
+
+        let { searchBy, value } = req.query || false
+
+        await client.connect()
+
+        const data = await todos.find({ [searchBy]: { $regex: `${value}`, $options: '/^/' } }).limit(limit)
+            .skip((page - 1) * limit)
+            .sort({}).toArray()
+
+        return res.status(200).json({ message: `Successfuly Fetched Blogs`, data: data })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Internal server error" })
+    } finally {
+        await client.close()
+    }
+
+}
+
 module.exports = {
     createTodo,
     deleteTodo,
     getTodo,
     getAllTodo,
     updateTodo,
-    updateTodoListStatus
+    updateTodoListStatus,
+    searchTodo
 }
