@@ -61,7 +61,6 @@ const getPost = async (req, res) => {
         }
 
         const commentsForThePost = await comments.find({ postId: id }).toArray()
-        console.log("commentsForThePost", commentsForThePost)
         data.comments = commentsForThePost ?? []
 
         await hset("post", `${id}`, data)
