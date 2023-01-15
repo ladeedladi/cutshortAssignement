@@ -12,7 +12,6 @@ app.use(cors({ origin: "*" }))
 app.use(express.json())
 
 //routes
-
 app.use(user)
 app.use(todos)
 app.use(posts)
