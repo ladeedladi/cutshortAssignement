@@ -13,11 +13,9 @@ module.exports = async (req, res, next) => {
 
         const verify = await jwt.verify(token, process.env.TOKEN_SECRET)
         console.log("verify: " + verify)
-        const id = verify
+        const id = verify.id
 
         if (id) {
-
-
             await client.connect()
 
             const findUser = await users.findOne({ email: id })

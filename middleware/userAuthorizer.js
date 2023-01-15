@@ -12,8 +12,8 @@ module.exports = async (req, res, next) => {
     try {
 
         const verify = await jwt.verify(token, process.env.TOKEN_SECRET)
-        console.log("verify: " + verify)
-        const id = verify
+        console.log("verify: " + verify.id)
+        const id = verify.id
 
         if (id) {
 
