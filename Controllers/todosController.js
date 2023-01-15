@@ -93,7 +93,7 @@ const getTodo = async (req, res) => {
         await client.connect()
         const data = await todos.findOne({ _id: ObjectId(id) })
         if (!data) {
-            res.status(404).json({ message: "Todo Not Found" })
+            return res.status(404).json({ message: "Todo Not Found" })
         }
         await hset("todo", `${id}`, data)
 

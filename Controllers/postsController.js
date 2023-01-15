@@ -56,7 +56,7 @@ const getPost = async (req, res) => {
         let data = await posts.findOne({ _id: ObjectId(id) })
 
         if (!data) {
-            res.status(404).json({ message: "Post Not Found" })
+            return res.status(404).json({ message: "Post Not Found" })
         }
 
         const commentsForThePost = await comments.find({ postId: id }).toArray()
