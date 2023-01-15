@@ -92,6 +92,9 @@ const getTodo = async (req, res) => {
 
         await client.connect()
         const data = await todos.findOne({ _id: ObjectId(id) })
+        if (!data) {
+            res.status(404).json({ message: "Todo Not Found" })
+        }
         await hset("todo", `${id}`, data)
 
         return res.status(200).json({ message: `Successfuly Fetched Todo List ${id}`, data: data })
@@ -248,7 +251,7 @@ const searchTodo = async (req, res) => {
             .skip((page - 1) * limit)
             .sort({}).toArray()
 
-        return res.status(200).json({ message: `Successfuly Fetched Blogs`, data: data })
+        return res.status(200).json({ message: `Successfuly Fetched Todo lists`, data: data })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" })

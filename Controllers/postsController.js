@@ -47,7 +47,6 @@ const getPost = async (req, res) => {
             return res.status(400).json({ message: "Id Not Passed" })
         }
 
-
         let cachedData = await hmget("post", `${id}`)
         if (cachedData) {
             return res.status(200).json({ message: `Successfully Fetched Post`, data: cachedData })
@@ -160,16 +159,14 @@ const searchPosts = async (req, res) => {
     limit = limit ? parseInt(limit) : 10
 
     try {
-
         let { searchBy, value } = req.query || false
 
         await client.connect()
-
         const data = await posts.find({ [searchBy]: { $regex: `${value}`, $options: '/^/' } }).limit(limit)
             .skip((page - 1) * limit)
             .sort({}).toArray()
 
-        return res.status(200).json({ message: `Successfuly Fetched Blogs`, data: data })
+        return res.status(200).json({ message: `Successfuly Fetched Posts`, data: data })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" })

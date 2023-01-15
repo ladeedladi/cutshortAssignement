@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const MongoClient = require('mongodb').MongoClient
-const { hset, hmget, del } = require('../lib/redis')
+const { del } = require('../lib/redis')
 
 const signUp = async (req, res, next) => {
 
@@ -45,7 +45,6 @@ const updateUserStatus = async (req, res, next) => {
     const users = database.collection("users")
 
     try {
-
         const { status, email } = req.query
 
         if (!email || !status) {

@@ -90,7 +90,6 @@ const getAllUser = async (req, res) => {
     const users = database.collection("users")
 
     try {
-
         let { page, limit, sortBy } = req.query
 
         page = parseInt(page) ?? 1
@@ -126,7 +125,6 @@ const searchUsers = async (req, res) => {
     const users = database.collection("users")
 
     try {
-
         let { searchBy, value } = req.query || false
 
         await client.connect()
@@ -135,7 +133,7 @@ const searchUsers = async (req, res) => {
             { role: { $ne: "admin" }, [searchBy]: { $regex: `${value}`, $options: '/^/' } }, { "projection": { name: 1, email: 1, phone: 1 } }
         ).toArray()
 
-        return res.status(200).json({ message: `Successfuly Fetched Blogs`, data: data })
+        return res.status(200).json({ message: `Successfuly Fetched Users`, data: data })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" })
