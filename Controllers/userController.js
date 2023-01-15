@@ -19,12 +19,12 @@ const signUp = async (req, res, next) => {
         console.log(user, `<<<user`)
 
         if (user) {
-            return res.status(403).json({ message: "User already exists, please login" })
+            return res.status(403).json({ message: "User Already Exists, Please Login" })
         }
         const saltRounds = 10
         const hash = await bcrypt.hash(password, saltRounds)
 
-        await users.insertOne({ name, email, phone, password: hash })
+        await users.insertOne({ name, email, phone, password: hash, status: "active" })
 
         await del("users")
         return res.status(201).json({ message: `Successfuly signed up` })
@@ -81,8 +81,6 @@ const login = async (req, res) => {
 
 const getAllUser = async (req, res) => {
 
-
-
     const client = await new MongoClient(process.env.MONGODB_URI)
     const database = client.db("dbs")
     const users = database.collection("users")
@@ -101,7 +99,7 @@ const getAllUser = async (req, res) => {
         }
 
         await client.connect()
-        let data = await users.find({}, { "projection": { name: 1, email: 1, phone: 1 } }).limit(limit)
+        let data = await users.find({ role: { $ne: "admin" } }, { "projection": { name: 1, email: 1, phone: 1 } }).limit(limit)
             .skip((page - 1) * limit)
             .sort(sortBy).toArray()
 
@@ -118,6 +116,32 @@ const getAllUser = async (req, res) => {
 
 }
 
+const searchUsers = async (req, res) => {
+
+    const client = await new MongoClient(process.env.MONGODB_URI)
+    const database = client.db("dbs")
+    const users = database.collection("users")
+
+    try {
+
+        let { searchBy, value } = req.query || false
+
+        await client.connect()
+
+        const data = await users.find(
+            { role: { $ne: "admin" }, [searchBy]: { $regex: `${value}`, $options: '/^/' } }, { "projection": { name: 1, email: 1, phone: 1 } }
+        ).toArray()
+
+        return res.status(200).json({ message: `Successfuly Fetched Blogs`, data: data })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Internal server error" })
+    } finally {
+        await client.close()
+    }
+
+}
+
 module.exports = {
-    signUp, login, getAllUser
+    signUp, login, getAllUser, searchUsers
 }
