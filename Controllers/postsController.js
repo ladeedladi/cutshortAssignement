@@ -56,8 +56,13 @@ const getPost = async (req, res) => {
         await client.connect()
         let data = await posts.findOne({ _id: ObjectId(id) })
 
+        if (!data) {
+            res.status(404).json({ message: "Post Not Found" })
+        }
+
         const commentsForThePost = await comments.find({ postId: id }).toArray()
-        data.comments = commentsForThePost
+        console.log("commentsForThePost", commentsForThePost)
+        data.comments = commentsForThePost ?? []
 
         await hset("post", `${id}`, data)
 
