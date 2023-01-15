@@ -60,6 +60,8 @@ const deleteTodo = async (req, res) => {
         if (todo.uploadedBy !== email) return res.status(401).json({ message: "User Not Authorized" })
 
         await todos.deleteOne({ _id: ObjectId(id) })
+        await del("todo")
+        await del("todos")
         return res.status(200).json({ message: `Successfuly Deleted Todo List ${id}` })
     } catch (err) {
         console.log(err)
@@ -168,6 +170,7 @@ const updateTodo = async (req, res) => {
         let update = await todos.updateOne({ _id: ObjectId(id) }, { $set: { task: task, uploadedBy: email, updatedDate: date } })
         if (update.modifiedCount !== 0) {
             await hdel("todo", `${id}`)
+            await del("todos")
         }
 
         return res.status(201).json({ message: `Successfully Updated Todo list ${id}`, data: req.body })
@@ -211,6 +214,7 @@ const updateTodoListStatus = async (req, res) => {
         let update = await todos.updateOne({ _id: ObjectId(id) }, { $set: { status: status, updatedDate: date } })
         if (update.modifiedCount !== 0) {
             await hdel("todo", `${id}`)
+            await del("todos")
         }
 
         return res.status(201).json({ message: `Successfully Updated Todo list Status to ${status}` })
