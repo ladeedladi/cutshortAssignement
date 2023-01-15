@@ -144,12 +144,43 @@ const addComment = async (req, res) => {
 
 }
 
+const searchPosts = async (req, res) => {
+
+    const client = await new MongoClient(process.env.MONGODB_URI)
+    const database = client.db("dbs")
+    const posts = database.collection("posts")
+
+    let { page, limit } = req.query || false
+
+    page = page ? parseInt(page) : 1
+    limit = limit ? parseInt(limit) : 10
+
+    try {
+
+        let { searchBy, value } = req.query || false
+
+        await client.connect()
+
+        const data = await posts.find({ [searchBy]: { $regex: `${value}`, $options: '/^/' } }).limit(limit)
+            .skip((page - 1) * limit)
+            .sort({}).toArray()
+
+        return res.status(200).json({ message: `Successfuly Fetched Blogs`, data: data })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Internal server error" })
+    } finally {
+        await client.close()
+    }
+
+}
 
 module.exports = {
     createPost,
     getPost,
     getAllPosts,
-    addComment
+    addComment,
+    searchPosts
 }
 
 
