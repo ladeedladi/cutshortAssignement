@@ -1,5 +1,6 @@
 const express = require('express')
 const user = require('./Routes/user')
+const admin = require('./Routes/admin')
 const todos = require('./Routes/todos')
 const posts = require('./Routes/posts')
 const cors = require('cors')
@@ -15,6 +16,7 @@ app.use(express.json())
 app.use(user)
 app.use(todos)
 app.use(posts)
+app.use(admin)
 
 app.get(`/`, (req, res, next) => {
     res.json({ message: `working!!` })
