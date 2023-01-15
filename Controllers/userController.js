@@ -34,7 +34,7 @@ const signUp = async (req, res, next) => {
         await users.insertOne({ name, email, phone, password: hash, status: "active" })
 
         await del("users")
-        return res.status(201).json({ message: `Successfuly signed up` })
+        return res.status(200).json({ message: `Successfuly signed up` })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" })

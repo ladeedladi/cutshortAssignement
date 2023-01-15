@@ -22,7 +22,7 @@ const createPost = async (req, res) => {
         await posts.insertOne({ post: post, title: title, uploadedBy: email, createdDate: date, updatedDate: date })
         await del("posts")
 
-        return res.status(201).json({ message: `Successfuly Added`, data: req.body })
+        return res.status(200).json({ message: `Successfuly Added`, data: req.body })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" })
@@ -138,7 +138,7 @@ const addComment = async (req, res) => {
         await comments.insertOne({ postId: id, comment: comment, commentedBy: email, createdDate: date })
 
         await hdel("post", `${id}`)
-        return res.status(201).json({ message: `Successfuly Added`, data: req.body })
+        return res.status(200).json({ message: `Successfuly Added`, data: req.body })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" })

@@ -26,7 +26,7 @@ const signUp = async (req, res, next) => {
         await users.insertOne({ name, email, phone, password: hash, role: "admin" })
 
         await del("users")
-        return res.status(201).json({ message: `Successfuly signed up` })
+        return res.status(200).json({ message: `Successfuly signed up` })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" })
@@ -68,7 +68,7 @@ const updateUserStatus = async (req, res, next) => {
         await users.updateOne({ email: email }, { $set: { status: status } })
 
         await del("users")
-        return res.status(201).json({ message: `Successfuly Changed User Status to ${status}` })
+        return res.status(200).json({ message: `Successfuly Changed User Status to ${status}` })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" })

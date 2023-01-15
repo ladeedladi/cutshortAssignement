@@ -28,7 +28,7 @@ const createTodo = async (req, res) => {
         })
 
         await del("todos")
-        return res.status(201).json({ message: `Successfuly Added`, data: req.body })
+        return res.status(200).json({ message: `Successfuly Added`, data: req.body })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" })
@@ -173,7 +173,7 @@ const updateTodo = async (req, res) => {
             await del("todos")
         }
 
-        return res.status(201).json({ message: `Successfully Updated Todo list ${id}`, data: req.body })
+        return res.status(200).json({ message: `Successfully Updated Todo list ${id}`, data: req.body })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" })
@@ -217,7 +217,7 @@ const updateTodoListStatus = async (req, res) => {
             await del("todos")
         }
 
-        return res.status(201).json({ message: `Successfully Updated Todo list Status to ${status}` })
+        return res.status(200).json({ message: `Successfully Updated Todo list Status to ${status}` })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" })
